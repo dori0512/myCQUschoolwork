@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .clock {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .hour-hand,
+        .minute-hand,
+        .second-hand {
+            background-color: #333;
+            position: absolute;
+            transform-origin: center bottom;
+        }
+
+        .hour-hand {
+            width: 8px;
+            height: 70px;
+            border-radius: 4px;
+            top: 80px;
+            left: calc(50% - 4px);
+        }
+
+        .minute-hand {
+            width: 6px;
+            height: 110px;
+            border-radius: 3px;
+            top: 40px;
+            left: calc(50% - 3px);
+        }
+
+        .second-hand {
+            width: 3px;
+            height: 130px;
+            top: 20px;
+            left: calc(50% - 2px);
+        }
+
+        .center-dot {
+            width: 16px;
+            height: 16px;
+            background-color: #5b6065;
+            border-radius: 50%;
+            position: absolute;
+            top: calc(50% - 8px);
+            left: calc(50% - 8px);
+        }
+        .number {
+            position: absolute;
+            color: #000;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .time {
+            font-size: 35px;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="clock">
+        <div class="hour-markers">
+            <div class="hour-marker" style="transform: rotate(30deg);"></div>
+            <div class="hour-marker" style="transform: rotate(60deg);"></div>
+            <div class="hour-marker" style="transform: rotate(90deg);"></div>
+            <div class="hour-marker" style="transform: rotate(120deg);"></div>
+            <div class="hour-marker" style="transform: rotate(150deg);"></div>
+            <div class="hour-marker" style="transform: rotate(180deg);"></div>
+            <div class="hour-marker" style="transform: rotate(210deg);"></div>
+            <div class="hour-marker" style="transform: rotate(240deg);"></div>
+            <div class="hour-marker" style="transform: rotate(270deg);"></div>
+            <div class="hour-marker" style="transform: rotate(300deg);"></div>
+            <div class="hour-marker" style="transform: rotate(330deg);"></div>
+            <div class="hour-marker" style="transform: rotate(360deg);"></div>
+        </div>
+        <div class="hour-hand"></div>
+        <div class="minute-hand"></div>
+        <div class="second-hand"></div>
+        <div class="center-dot"></div>
+        <div class="numbers"></div>
+    </div>
+
+    <div class="time" id="time"></div>
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const second = now.getSeconds();
+            const minute = now.getMinutes();
+            const hour = now.getHours();
+
+            const secondRotation = (second / 60) * 360;
+            const minuteRotation = (minute / 60) * 360 + (secondRotation / 60);
+            const hourRotation = (hour / 12) * 360 + (minuteRotation / 12);
+
+            document.querySelector('.second-hand').style.transform = `rotate(${secondRotation}deg)`;
+            document.querySelector('.minute-hand').style.transform = `rotate(${minuteRotation}deg)`;
+            document.querySelector('.hour-hand').style.transform = `rotate(${hourRotation}deg)`;
+            
+            const currentTime = `${formatTime(hour)}:${formatTime(minute)}:${formatTime(second)}`;
+            document.getElementById('time').textContent = currentTime;
+        }
+
+        function drawNumbers(radius) {
+            const numbersContainer = document.querySelector('.numbers');
+            for (let num = 1; num <= 12; num++) {
+                const number = document.createElement('div');
+                const angle = num * 30 * (Math.PI / 180);
+                const x = (Math.sin(angle) * (radius - 20) + radius).toFixed(2);
+                const y = (-Math.cos(angle) * (radius - 20) + radius).toFixed(2);
+                number.classList.add('number');
+                number.style.left = x + 'px';
+                number.style.top = y + 'px';
+                number.textContent = num;
+                numbersContainer.appendChild(number);
+            }
+        }
+
+        function formatTime(time) {
+            return time < 10 ? `0${time}` : time;
+        }
+
+        const clockRadius = 140;
+        drawNumbers(clockRadius);
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+
+</html>
